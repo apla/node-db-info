@@ -16,6 +16,9 @@
     "optimist": "~0.3.0",
     "async": "~>0.1.15"
   },
+  "scripts": {
+    "test": "mocha"
+  },
   "devDependencies": {
     "nodeunit": "~>0.6.4"
   }

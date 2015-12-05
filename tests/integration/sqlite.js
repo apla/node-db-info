@@ -1,118 +1,152 @@
+var assert = require ('assert');
 
 var dbinfo = require("../../lib/db_info");
 var nodeunit = require("nodeunit");
 var sqlite3 = require("sqlite3");
 
-exports['Sqlite'] = nodeunit.testCase({
-  setUp: function(callback) {
-		callback();
-  },
+describe ("SQLite", function () {
 
-  tearDown: function(callback) {
-		callback();
-  },
+	var db = new sqlite3.Database(':memory:');
 
-  "single table": function(test) {
-		var db = new sqlite3.Database(':memory:');
-		db.run("CREATE TABLE person (id INTEGER PRIMARY KEY, name TEXT NOT NULL, email TEXT, age INTEGER);", function() {
-			dbinfo.getInfo({
+	before (function(callback) {
+
+		db.serialize (function () {
+			db.run(
+				"CREATE TABLE person (id INTEGER PRIMARY KEY, name TEXT NOT NULL, email TEXT, age INTEGER);",
+				function() {
+				});
+
+			db.run("CREATE TABLE \"event\" (id INTEGER PRIMARY KEY AUTOINCREMENT, str TEXT UNIQUE, txt TEXT NOT NULL, intg INTEGER , rel REAL , dt INTEGER );", function() {});
+			db.run("CREATE INDEX strIndex on event (str);", function() {});
+			db.run("CREATE INDEX txtIndex on event (txt);", function() {
+				callback();
+			});
+
+			// TODO: parser not ready for this
+			// db.run("CREATE TABLE t1(a, b COLLATE BINARY, c COLLATE RTRIM, d COLLATE NOCASE);");
+
+//			db.all ("PRAGMA table_info (\"event\");", function (err, data) {
+//				console.log ('!!!!', err, data);
+//			});
+//			db.all ("PRAGMA index_list (\"event\");", function (err, data) {
+//				console.log ('!!!!', err, data);
+//				data.forEach (function (idx) {
+//					db.all ("PRAGMA index_xinfo (\""+idx.name+"\");", function (err, data) {
+//						console.log ('%%%%', err, data);
+//					});
+//				});
+//			});
+//			db.all ("PRAGMA foreign_key_list (\"event\");", function (err, data) {
+//				console.log ('!!!!', err, data);
+//			});
+//			db.all ("PRAGMA table_info (\"t1\");", function (err, data) {
+//				console.log ('!!!!', err, data);
+//			});
+//			db.all ("select * from sqlite_master;", function (err, data) {
+//				console.log (789);
+//				callback();
+//				console.log ('!!!!', err, data);
+//			});
+
+		});
+	});
+
+	after (function(callback) {
+		callback();
+	});
+
+	it ("single table", function (done) {
+		dbinfo.getInfo({
 			driver: 'sqlite3',
 			db: db
-			}, function(err, result) {
+		}, function(err, result) {
 			if(err) { console.error(err); return; }
 
 			//console.log(require('util').inspect(result, false, 10));
 
-			test.ok(result.tables['person']);
+			assert.ok(result.tables['person']);
 			var personTable = result.tables['person'];
 
-			test.ok(personTable.columns['id']);
-			test.equal(personTable.columns['id'].name, 'id');
-			test.equal(personTable.columns['id'].type, dbinfo.INTEGER);
-			test.ok(personTable.columns['id'].primaryKey);
-			test.ok(personTable.columns['id'].notNull);
+			assert.ok(personTable.columns['id']);
+			assert.equal(personTable.columns['id'].name, 'id');
+			assert.equal(personTable.columns['id'].type, dbinfo.INTEGER);
+			assert.ok(personTable.columns['id'].primaryKey);
+			assert.ok(personTable.columns['id'].notNull);
 
-			test.ok(personTable.columns['name']);
-			test.equal(personTable.columns['name'].name, 'name');
-			test.equal(personTable.columns['name'].type, dbinfo.TEXT);
-			test.ok(!personTable.columns['name'].primaryKey);
-			test.ok(personTable.columns['name'].notNull);
+			assert.ok(personTable.columns['name']);
+			assert.equal(personTable.columns['name'].name, 'name');
+			assert.equal(personTable.columns['name'].type, dbinfo.TEXT);
+			assert.ok(!personTable.columns['name'].primaryKey);
+			assert.ok(personTable.columns['name'].notNull);
 
-			test.ok(personTable.columns['email']);
-			test.equal(personTable.columns['email'].name, 'email');
-			test.equal(personTable.columns['email'].type, dbinfo.TEXT);
-			test.ok(!personTable.columns['email'].primaryKey);
-			test.ok(!personTable.columns['email'].notNull);
+			assert.ok(personTable.columns['email']);
+			assert.equal(personTable.columns['email'].name, 'email');
+			assert.equal(personTable.columns['email'].type, dbinfo.TEXT);
+			assert.ok(!personTable.columns['email'].primaryKey);
+			assert.ok(!personTable.columns['email'].notNull);
 
-			test.ok(personTable.columns['age']);
-			test.equal(personTable.columns['age'].name, 'age');
-			test.equal(personTable.columns['age'].type, dbinfo.INTEGER);
-			test.ok(!personTable.columns['age'].primaryKey);
-			test.ok(!personTable.columns['age'].notNull);
+			assert.ok(personTable.columns['age']);
+			assert.equal(personTable.columns['age'].name, 'age');
+			assert.equal(personTable.columns['age'].type, dbinfo.INTEGER);
+			assert.ok(!personTable.columns['age'].primaryKey);
+			assert.ok(!personTable.columns['age'].notNull);
+
+			// db.close(); // Segmentation fault with next test
+			done();
+		});
+	});
+
+	it ("more complex table", function (done) {
+		dbinfo.getInfo({
+			driver: 'sqlite3',
+			db: db
+		}, function(err, result) {
+			if(err) { console.error(err); return; }
+
+			//console.log(require('util').inspect(result, false, 10));
+
+			assert.ok(result.tables['event']);
+			var eventTable = result.tables['event'];
+
+			assert.ok(eventTable.columns['id']);
+			assert.equal(eventTable.columns['id'].name, 'id');
+			assert.equal(eventTable.columns['id'].type, dbinfo.INTEGER);
+			assert.ok(eventTable.columns['id'].primaryKey);
+			assert.ok(eventTable.columns['id'].autoIncrement);
+
+			assert.ok(eventTable.columns['str']);
+			assert.equal(eventTable.columns['str'].name, 'str');
+			assert.equal(eventTable.columns['str'].type, dbinfo.TEXT);
+			assert.ok(eventTable.columns['str'].unique);
+
+			assert.ok(eventTable.columns['txt']);
+			assert.equal(eventTable.columns['txt'].name, 'txt');
+			assert.equal(eventTable.columns['txt'].type, dbinfo.TEXT);
+			assert.ok(eventTable.columns['txt'].notNull);
+
+			assert.ok(eventTable.columns['intg']);
+			assert.equal(eventTable.columns['intg'].name, 'intg');
+			assert.equal(eventTable.columns['intg'].type, dbinfo.INTEGER);
+
+			assert.ok(eventTable.columns['rel']);
+			assert.equal(eventTable.columns['rel'].name, 'rel');
+			assert.equal(eventTable.columns['rel'].type, dbinfo.REAL);
+
+			assert.ok(eventTable.columns['dt']);
+			assert.equal(eventTable.columns['dt'].name, 'dt');
+			assert.equal(eventTable.columns['dt'].type, dbinfo.INTEGER);
+
+			assert.ok(eventTable.indexes['strIndex']);
+			assert.ok(eventTable.indexes['strIndex'].name, 'strIndex');
+			assert.ok(eventTable.indexes['strIndex'].columns, ['str']);
+
+			assert.ok(eventTable.indexes['txtIndex']);
+			assert.ok(eventTable.indexes['txtIndex'].name, 'txtIndex');
+			assert.ok(eventTable.indexes['txtIndex'].columns, ['txt']);
 
 			db.close();
-			test.done();
-			});
+			done();
 		});
-  },
-
-  "more complex table": function(test) {
-    var db = new sqlite3.Database(':memory:');
-    db.run("CREATE TABLE \"event\" (id INTEGER PRIMARY KEY AUTOINCREMENT, str TEXT UNIQUE, txt TEXT NOT NULL, intg INTEGER , rel REAL , dt INTEGER );", function() {
-		db.run("CREATE INDEX strIndex on event (str);", function() {
-		db.run("CREATE INDEX txtIndex on event (txt);", function() {
-				dbinfo.getInfo({
-					driver: 'sqlite3',
-					db: db
-				}, function(err, result) {
-					if(err) { console.error(err); return; }
-
-					//console.log(require('util').inspect(result, false, 10));
-
-					test.ok(result.tables['event']);
-					var eventTable = result.tables['event'];
-
-					test.ok(eventTable.columns['id']);
-					test.equal(eventTable.columns['id'].name, 'id');
-					test.equal(eventTable.columns['id'].type, dbinfo.INTEGER);
-					test.ok(eventTable.columns['id'].primaryKey);
-					test.ok(eventTable.columns['id'].autoIncrement);
-
-					test.ok(eventTable.columns['str']);
-					test.equal(eventTable.columns['str'].name, 'str');
-					test.equal(eventTable.columns['str'].type, dbinfo.TEXT);
-					test.ok(eventTable.columns['str'].unique);
-
-					test.ok(eventTable.columns['txt']);
-					test.equal(eventTable.columns['txt'].name, 'txt');
-					test.equal(eventTable.columns['txt'].type, dbinfo.TEXT);
-					test.ok(eventTable.columns['txt'].notNull);
-
-					test.ok(eventTable.columns['intg']);
-					test.equal(eventTable.columns['intg'].name, 'intg');
-					test.equal(eventTable.columns['intg'].type, dbinfo.INTEGER);
-
-					test.ok(eventTable.columns['rel']);
-					test.equal(eventTable.columns['rel'].name, 'rel');
-					test.equal(eventTable.columns['rel'].type, dbinfo.REAL);
-
-					test.ok(eventTable.columns['dt']);
-					test.equal(eventTable.columns['dt'].name, 'dt');
-					test.equal(eventTable.columns['dt'].type, dbinfo.INTEGER);
-
-					test.ok(eventTable.indexes['strIndex']);
-					test.ok(eventTable.indexes['strIndex'].name, 'strIndex');
-					test.ok(eventTable.indexes['strIndex'].columns, ['str']);
-
-					test.ok(eventTable.indexes['txtIndex']);
-					test.ok(eventTable.indexes['txtIndex'].name, 'txtIndex');
-					test.ok(eventTable.indexes['txtIndex'].columns, ['txt']);
-
-					db.close();
-					test.done();
-				}) }) });
-			}
-    );
-  }
+	});
 
 });

@@ -1,71 +1,115 @@
 
-var dbinfo = require("../../lib/db_info");
-var nodeunit = require("nodeunit");
-var sqlite3 = require("mysql");
+var DBInfo = require("../../lib/db_info");
+var mysql = require("mysql");
 
-/*
- CREATE TABLE person (id INTEGER PRIMARY KEY, name VARCHAR(255) NOT NULL, email VARCHAR(100), age INTEGER);
- CREATE INDEX nameIndex ON person (name);
- CREATE INDEX otherIndex ON person (name,email);
-*/
-exports['Mysql'] = nodeunit.testCase({
-  setUp: function(callback) {
-	callback();
-  },
+var assert = require ("assert");
 
-  tearDown: function(callback) {
-	callback();
-  },
+var config = require ("../config");
 
-  "single table": function(test) {
-	dbinfo.getInfo({
-	  driver: 'mysql',
-	  user: 'root',
-	  password: 'root',
-	  database: 'dbinfotest'
-	}, function(err, result) {
-	  if(err) { console.error(err); return; }
+if (!config.mysql)
+	return;
 
-	  //console.log(require('util').inspect(result, false, 10));
+describe ("Mysql schema", function () {
 
-	  test.ok(result.tables['person']);
-	  var personTable = result.tables['person'];
+	var db;
+	var dbInfo;
+	var connParams = {
+		driver: 'mysql',
+		user: config.mysql.user,
+		password: config.mysql.password,
+		database: config.mysql.database
+	};
 
-		test.ok(personTable.columns['id']);
-	  test.equal(personTable.columns['id'].name, 'id');
-	  test.equal(personTable.columns['id'].type, dbinfo.INTEGER);
-	  test.ok(personTable.columns['id'].primaryKey);
-	  test.ok(personTable.columns['id'].notNull);
+	before (function (callback) {
 
-		test.ok(personTable.columns['name']);
-	  test.equal(personTable.columns['name'].name, 'name');
-	  test.equal(personTable.columns['name'].type, dbinfo.VARCHAR);
-	  test.equal(personTable.columns['name'].length, 255);
-	  test.ok(!personTable.columns['name'].primaryKey);
-	  test.ok(personTable.columns['name'].notNull);
+		dbInfo = new DBInfo (connParams);
+		dbInfo.connect (function (err, connection) {
 
-		test.ok(personTable.columns['email']);
-	  test.equal(personTable.columns['email'].name, 'email');
-	  test.equal(personTable.columns['email'].type, dbinfo.VARCHAR);
-	  test.equal(personTable.columns['email'].length, 100);
-	  test.ok(!personTable.columns['email'].primaryKey);
-	  test.ok(!personTable.columns['email'].notNull);
+			db = connection;
 
-		test.ok(personTable.columns['age']);
-	  test.equal(personTable.columns['age'].name, 'age');
-	  test.equal(personTable.columns['age'].type, dbinfo.INTEGER);
-	  test.ok(!personTable.columns['age'].primaryKey);
-	  test.ok(!personTable.columns['age'].notNull);
+			dbInfo.do ([
+				"CREATE TABLE IF NOT EXISTS person (id INTEGER PRIMARY KEY, name VARCHAR(255) NOT NULL, email VARCHAR(100), age INTEGER);",
+				"CREATE INDEX nameIndex ON person (name);",
+				"CREATE UNIQUE INDEX uniqueEmailIndex ON person (email);",
+				"CREATE INDEX otherIndex ON person (name,email);"
+			], function (err, results) {
+				callback (err);
+			});
+		});
+	})
 
-		test.ok(personTable.indexes['nameIndex']);
-		test.ok(personTable.indexes['nameIndex'].name, 'nameIndex');
-		test.ok(personTable.indexes['nameIndex'].columns, ['name']);
-
-		test.ok(personTable.indexes['otherIndex']);
-		test.ok(personTable.indexes['otherIndex'].name, 'otherIndex');
-		test.ok(personTable.indexes['otherIndex'].columns, ['name', 'email']);
-
-	  test.done();
+	after (function (callback) {
+		dbInfo.do ([
+			// "DROP TABLE person;", // TODO: mysql error
+			"DROP INDEX nameIndex ON person;",
+			"DROP INDEX uniqueEmailIndex ON person",
+			"DROP INDEX otherIndex ON person;"
+		], function (err, results) {
+			callback (err);
+		});
 	});
-  }
+
+	it ("with existing connection", function (done) {
+		DBInfo.getInfo(connParams, function(err, result) {
+		// DBInfo.getInfo({driver: connParams.driver, db: db}, function(err, result) {
+
+			if(err) { console.error(err); return; }
+
+			//console.log(require('util').inspect(result, false, 10));
+
+			assert.ok(result.tables['person']);
+
+			done ();
+		});
+	});
+
+	it ("single table", function (done) {
+		DBInfo.getInfo(connParams, function(err, result) {
+
+			// console.log (result);
+
+			if(err) { console.error(err); return; }
+
+			//console.log(require('util').inspect(result, false, 10));
+
+			assert.ok(result.tables['person']);
+			var personTable = result.tables['person'];
+
+			assert.ok(personTable.columns['id']);
+			assert.equal(personTable.columns['id'].name, 'id');
+			assert.equal(personTable.columns['id'].type, DBInfo.INTEGER);
+			assert.ok(personTable.columns['id'].primaryKey);
+			assert.ok(personTable.columns['id'].notNull);
+
+			assert.ok(personTable.columns['name']);
+			assert.equal(personTable.columns['name'].name, 'name');
+			assert.equal(personTable.columns['name'].type, DBInfo.VARCHAR);
+			assert.equal(personTable.columns['name'].length, 255);
+			assert.ok(!personTable.columns['name'].primaryKey);
+			assert.ok(personTable.columns['name'].notNull);
+
+			assert.ok(personTable.columns['email']);
+			assert.equal(personTable.columns['email'].name, 'email');
+			assert.equal(personTable.columns['email'].type, DBInfo.VARCHAR);
+			assert.equal(personTable.columns['email'].length, 100);
+			assert.ok(!personTable.columns['email'].primaryKey);
+			assert.ok(!personTable.columns['email'].notNull);
+
+			assert.ok(personTable.columns['age']);
+			assert.equal(personTable.columns['age'].name, 'age');
+			assert.equal(personTable.columns['age'].type, DBInfo.INTEGER);
+			assert.ok(!personTable.columns['age'].primaryKey);
+			assert.ok(!personTable.columns['age'].notNull);
+
+			assert.ok(personTable.indexes['nameIndex']);
+			assert.ok(personTable.indexes['nameIndex'].name, 'nameIndex');
+			assert.ok(personTable.indexes['nameIndex'].columns, ['name']);
+
+			assert.ok(personTable.indexes['otherIndex']);
+			assert.ok(personTable.indexes['otherIndex'].name, 'otherIndex');
+			assert.ok(personTable.indexes['otherIndex'].columns, ['name', 'email']);
+
+			done();
+		});
+	});
 });
