@@ -14,6 +14,12 @@ module.exports = {
 
 	sqlite3: {
 		filename: ':memory:'
+	},
+
+	mssql: {
+		userName: 'expressaccess',
+		password: '2strongWa+er',
+		server: '192.168.42.231'
 	}
 
 };
