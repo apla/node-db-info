@@ -4,7 +4,7 @@ var dbinfo = require("../../lib/db_info");
 var nodeunit = require("nodeunit");
 var sqlite3 = require("sqlite3");
 
-describe ("SQLite", function () {
+describe ("SQLite schema", function () {
 
 	var db = new sqlite3.Database(':memory:');
 
