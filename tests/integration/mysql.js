@@ -6,7 +6,7 @@ var assert = require ("assert");
 
 var config = require ("../config");
 
-if (!config.mysql)
+if (!config.connections.mysql)
 	return;
 
 describe ("Mysql schema", function () {
@@ -15,9 +15,9 @@ describe ("Mysql schema", function () {
 	var dbInfo;
 	var connParams = {
 		driver: 'mysql',
-		user: config.mysql.user,
-		password: config.mysql.password,
-		database: config.mysql.database
+		user: config.connections.mysql.user,
+		password: config.connections.mysql.password,
+		database: config.connections.mysql.database
 	};
 
 	before (function (callback) {
@@ -28,7 +28,7 @@ describe ("Mysql schema", function () {
 			db = connection;
 
 			dbInfo.do ([
-				"CREATE TABLE IF NOT EXISTS person (id INTEGER PRIMARY KEY, name VARCHAR(255) NOT NULL, email VARCHAR(100), age INTEGER);",
+				config.sql.person,
 				"CREATE INDEX nameIndex ON person (name);",
 				"CREATE UNIQUE INDEX uniqueEmailIndex ON person (email);",
 				"CREATE INDEX otherIndex ON person (name,email);"
@@ -40,10 +40,7 @@ describe ("Mysql schema", function () {
 
 	after (function (callback) {
 		dbInfo.do ([
-			// "DROP TABLE person;", // TODO: mysql error
-			"DROP INDEX nameIndex ON person;",
-			"DROP INDEX uniqueEmailIndex ON person",
-			"DROP INDEX otherIndex ON person;"
+			"DROP TABLE person;"
 		], function (err, results) {
 			callback (err);
 		});
@@ -66,48 +63,9 @@ describe ("Mysql schema", function () {
 	it ("single table", function (done) {
 		DBInfo.getInfo(connParams, function(err, result) {
 
-			// console.log (result);
-
 			if(err) { console.error(err); return; }
 
-			//console.log(require('util').inspect(result, false, 10));
-
-			assert.ok(result.tables['person']);
-			var personTable = result.tables['person'];
-
-			assert.ok(personTable.columns['id']);
-			assert.equal(personTable.columns['id'].name, 'id');
-			assert.equal(personTable.columns['id'].type, DBInfo.INTEGER);
-			assert.ok(personTable.columns['id'].primaryKey);
-			assert.ok(personTable.columns['id'].notNull);
-
-			assert.ok(personTable.columns['name']);
-			assert.equal(personTable.columns['name'].name, 'name');
-			assert.equal(personTable.columns['name'].type, DBInfo.VARCHAR);
-			assert.equal(personTable.columns['name'].length, 255);
-			assert.ok(!personTable.columns['name'].primaryKey);
-			assert.ok(personTable.columns['name'].notNull);
-
-			assert.ok(personTable.columns['email']);
-			assert.equal(personTable.columns['email'].name, 'email');
-			assert.equal(personTable.columns['email'].type, DBInfo.VARCHAR);
-			assert.equal(personTable.columns['email'].length, 100);
-			assert.ok(!personTable.columns['email'].primaryKey);
-			assert.ok(!personTable.columns['email'].notNull);
-
-			assert.ok(personTable.columns['age']);
-			assert.equal(personTable.columns['age'].name, 'age');
-			assert.equal(personTable.columns['age'].type, DBInfo.INTEGER);
-			assert.ok(!personTable.columns['age'].primaryKey);
-			assert.ok(!personTable.columns['age'].notNull);
-
-			assert.ok(personTable.indexes['nameIndex']);
-			assert.ok(personTable.indexes['nameIndex'].name, 'nameIndex');
-			assert.ok(personTable.indexes['nameIndex'].columns, ['name']);
-
-			assert.ok(personTable.indexes['otherIndex']);
-			assert.ok(personTable.indexes['otherIndex'].name, 'otherIndex');
-			assert.ok(personTable.indexes['otherIndex'].columns, ['name', 'email']);
+			config.checkCommon (assert, result);
 
 			done();
 		});
