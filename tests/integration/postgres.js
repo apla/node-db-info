@@ -28,9 +28,9 @@ describe ("postgres schema", function () {
 
 			dbInfo.do ([
 				"CREATE TABLE IF NOT EXISTS person (id INTEGER PRIMARY KEY, name VARCHAR(255) NOT NULL, email VARCHAR(100), age INTEGER);",
-				"CREATE INDEX nameIndex ON person (name);",
-				"CREATE UNIQUE INDEX uniqueEmailIndex ON person (email);",
-				"CREATE INDEX otherIndex ON person (name,email);"
+				'CREATE INDEX "nameIndex" ON person (name);',
+				'CREATE UNIQUE INDEX "uniqueEmailIndex" ON person (email);',
+				'CREATE INDEX "otherIndex" ON person (name,email);'
 			], function (err, results) {
 				callback (err);
 			});
@@ -98,11 +98,11 @@ describe ("postgres schema", function () {
 			assert.ok(!personTable.columns['age'].notNull);
 
 			assert.ok(personTable.indexes['nameIndex']);
-			assert.ok(personTable.indexes['nameIndex'].name, 'nameIndex');
+			assert.equal(personTable.indexes['nameIndex'].name, 'nameIndex');
 			assert.ok(personTable.indexes['nameIndex'].columns, ['name']);
 
 			assert.ok(personTable.indexes['otherIndex']);
-			assert.ok(personTable.indexes['otherIndex'].name, 'otherIndex');
+			assert.equal(personTable.indexes['otherIndex'].name, 'otherIndex');
 			assert.ok(personTable.indexes['otherIndex'].columns, ['name', 'email']);
 
 			done();

@@ -7,7 +7,7 @@ SELECT
 	, quote_ident(a.attname) AS "COLUMN_NAME"
 	, a.atttypid AS "DATA_TYPE"
 	, pg_catalog.format_type(a.atttypid, NULL) AS "TYPE_NAME"
-	, a.attlen AS "COLUMN_SIZE"
+	, a.attlen AS "DATA_LENGTH"
 	, NULL::text AS "BUFFER_LENGTH"
 	, NULL::text AS "DECIMAL_DIGITS"
 	, NULL::text AS "NUM_PREC_RADIX"
@@ -30,16 +30,16 @@ SELECT
 	, t.typtype AS "_pg_type_typtype"
 	, t.oid AS "_pg_type_oid"
 	, CASE
-		WHEN a.attnum = ANY(i.indkey) AND i.indisprimary = 't' THEN 'PRIMARY'
-		WHEN a.attnum = ANY(i.indkey) AND i.indisunique = 't' THEN 'UNIQUE'
+		WHEN i.indisprimary = 't' THEN 'PRIMARY'
+		WHEN i.indisunique = 't' THEN 'UNIQUE'
 		ELSE ''
-	END AS "INDEX"
-	, i.indkey
+	END AS "COLUMN_KEY"
+	 , i.indkey
 FROM
 	pg_catalog.pg_type t
 	JOIN pg_catalog.pg_attribute a ON (t.oid = a.atttypid)
 	JOIN pg_catalog.pg_class c ON (a.attrelid = c.oid)
-	JOIN pg_catalog.pg_index i ON (i.indrelid = c.oid)
+	LEFT JOIN pg_catalog.pg_index i ON (i.indrelid = c.oid and a.attnum = ANY(i.indkey))
 	LEFT JOIN pg_catalog.pg_attrdef af ON (a.attnum = af.adnum AND a.attrelid = af.adrelid)
 	JOIN pg_catalog.pg_namespace n ON (n.oid = c.relnamespace)
 WHERE
