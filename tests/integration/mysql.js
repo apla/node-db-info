@@ -50,7 +50,10 @@ describe ("Mysql schema", function () {
 		DBInfo.getInfo(connParams, function(err, result) {
 		// DBInfo.getInfo({driver: connParams.driver, db: db}, function(err, result) {
 
-			if(err) { console.error(err); return; }
+			if (err) {
+				// console.error(err);
+				assert (false, err);
+			}
 
 			//console.log(require('util').inspect(result, false, 10));
 
@@ -63,7 +66,10 @@ describe ("Mysql schema", function () {
 	it ("single table", function (done) {
 		DBInfo.getInfo(connParams, function(err, result) {
 
-			if(err) { console.error(err); return; }
+			if (err) {
+				// console.error(err);
+				assert (false, err);
+			}
 
 			config.checkCommon (assert, result);
 

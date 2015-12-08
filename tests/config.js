@@ -23,9 +23,15 @@ var connections = {
 	mssql: {
 		userName: 'expressaccess',
 		password: '2strongWa+er',
-		server: '192.168.42.231'
+		server: '192.168.42.231',
+		// port: '1433',
+		tunnel: {
+			gatewayHost: 'apla.me',
+			gatewayUser: 'apla',
+			gatewayPrivateKey: 'apla.me'
+		}
 	},
-	xoracle: {
+	oracle: {
 		user: 'oraxe',
 		password: '2strongWa+er',
 		//connectString: "(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.42.231)(PORT=1521))(CONNECT_DATA=(SID=XE))"
@@ -37,43 +43,60 @@ var connections = {
 
 var personSql = fs.readFileSync (path.join (__dirname, 'integration/person.sql')).toString();
 
-function checkCommon (assert, result) {
-	assert.ok(result.tables['person']);
-	var personTable = result.tables['person'];
+function dbCase (name, dialect) {
+	if (dialect === "oracle") {
+		return name.toUpperCase();
+	}
+	return name;
+}
 
-	assert.ok(personTable.columns['id']);
-	assert.equal(personTable.columns['id'].name, 'id');
-	assert.equal(personTable.columns['id'].type, DBInfo.INTEGER);
-	assert.ok(personTable.columns['id'].primaryKey);
-	assert.ok(personTable.columns['id'].notNull);
+function checkCommon (assert, result, dialect) {
+	assert.ok(result.tables[dbCase('person', dialect)]);
+	var personTable = result.tables[dbCase('person', dialect)];
 
-	assert.ok(personTable.columns['name']);
-	assert.equal(personTable.columns['name'].name, 'name');
-	assert.equal(personTable.columns['name'].type, DBInfo.VARCHAR);
-	assert.equal(personTable.columns['name'].length, 255);
-	assert.ok(!personTable.columns['name'].primaryKey);
-	assert.ok(personTable.columns['name'].notNull);
+	var id = dbCase('id', dialect);
+	assert.ok(personTable.columns[id]);
+	assert.equal(personTable.columns[id].name, id);
+	assert.ok(personTable.columns[id].primaryKey);
+	assert.ok(personTable.columns[id].notNull);
 
-	assert.ok(personTable.columns['email']);
-	assert.equal(personTable.columns['email'].name, 'email');
-	assert.equal(personTable.columns['email'].type, DBInfo.VARCHAR);
-	assert.equal(personTable.columns['email'].length, 100);
-	assert.ok(!personTable.columns['email'].primaryKey);
-	assert.ok(!personTable.columns['email'].notNull);
+	// TODO: INT is actually losing precision over FLOAT, NUMERIC or DECIMAL
+	// oracle reporting INTEGER as NUMERIC
+	if (dialect !== 'oracle')
+		assert.equal(personTable.columns[id].type, DBInfo.INTEGER);
 
-	assert.ok(personTable.columns['age']);
-	assert.equal(personTable.columns['age'].name, 'age');
-	assert.equal(personTable.columns['age'].type, DBInfo.DECIMAL);
-	assert.ok(!personTable.columns['age'].primaryKey);
-	assert.ok(!personTable.columns['age'].notNull);
+	var name = dbCase('name', dialect);
+	assert.ok(personTable.columns[name]);
+	assert.equal(personTable.columns[name].name, name);
+	assert.equal(personTable.columns[name].type, DBInfo.VARCHAR);
+	assert.equal(personTable.columns[name].length, 255);
+	assert.ok(!personTable.columns[name].primaryKey);
+	assert.ok(personTable.columns[name].notNull);
 
-	assert.ok(personTable.indexes['nameIndex']);
-	assert.equal(personTable.indexes['nameIndex'].name, 'nameIndex');
-	assert.ok(personTable.indexes['nameIndex'].columns, ['name']);
+	var email = dbCase('email', dialect);
+	assert.ok(personTable.columns[email]);
+	assert.equal(personTable.columns[email].name, email);
+	assert.equal(personTable.columns[email].type, DBInfo.VARCHAR);
+	assert.equal(personTable.columns[email].length, 100);
+	assert.ok(!personTable.columns[email].primaryKey);
+	assert.ok(!personTable.columns[email].notNull);
 
-	assert.ok(personTable.indexes['otherIndex']);
-	assert.equal(personTable.indexes['otherIndex'].name, 'otherIndex');
-	assert.ok(personTable.indexes['otherIndex'].columns, ['name', 'email']);
+	var age = dbCase('age', dialect);
+	assert.ok(personTable.columns[age]);
+	assert.equal(personTable.columns[age].name, age);
+	assert.equal(personTable.columns[age].type, DBInfo.DECIMAL);
+	assert.ok(!personTable.columns[age].primaryKey);
+	assert.ok(!personTable.columns[age].notNull);
+
+	var nameIndex = dbCase ('nameIndex', dialect);
+	assert.ok(personTable.indexes[nameIndex]);
+	assert.equal(personTable.indexes[nameIndex].name, nameIndex);
+	assert.ok(personTable.indexes[nameIndex].columns, [name]);
+
+	var otherIndex = dbCase ('otherIndex', dialect);
+	assert.ok(personTable.indexes[otherIndex]);
+	assert.equal(personTable.indexes[otherIndex].name, otherIndex);
+	assert.ok(personTable.indexes[otherIndex].columns, [name, email]);
 
 }
 

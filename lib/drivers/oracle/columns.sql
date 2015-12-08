@@ -1,4 +1,6 @@
 SELECT
+--      CASE WHEN c.CONSTRAINT_TYPE = 'P' THEN 'PRIMARY'   END INDEX_KEY,
+-- i.UNIQUENESS,
          to_char( NULL )     TABLE_CAT
        , tc.OWNER            TABLE_SCHEM
        , tc.TABLE_NAME       TABLE_NAME
@@ -47,7 +49,7 @@ ELSE decode( tc.DATA_TYPE
                 , 'NVARCHAR2', tc.CHAR_LENGTH
                 , 'NCHAR'    , tc.CHAR_LENGTH
                 , tc.DATA_LENGTH
-               )                   COLUMN_SIZE
+               )                   DATA_LENGTH
        , decode( tc.DATA_TYPE
                 , 'LONG RAW' , 2147483647
                 , 'LONG'     , 2147483647
@@ -62,13 +64,15 @@ ELSE decode( tc.DATA_TYPE
                )                   BUFFER_LENGTH
        , decode( tc.DATA_TYPE
                 , 'DATE'     ,  0
+                , 'TIMESTAMP',  0
                 , tc.DATA_SCALE
-               )                   DECIMAL_DIGITS     -- ...
+               )                   NUMERIC_PRECISION_RADIX     -- ...
        , decode( tc.DATA_TYPE
                 , 'FLOAT'    ,  2
                 , 'NUMBER'   ,  decode( tc.DATA_SCALE, NULL, 2, 10 )
+                , 'TIMESTAMP(6)', tc.DATA_SCALE
                 , NULL
-               )                   NUM_PREC_RADIX
+                )  NUMERIC_PRECISION
        , decode( tc.NULLABLE
                 , 'Y'        ,  1
                 , 'N'        ,  0
@@ -104,12 +108,25 @@ ELSE decode( tc.DATA_TYPE
        , to_number( NULL )   CHAR_OCTET_LENGTH  -- TODO
        , tc.COLUMN_ID        ORDINAL_POSITION
        , CAST (decode( tc.NULLABLE
-                , 'Y'        , 'YES'
-                , 'N'        , 'NO'
-                , NULL
-               ) as varchar2(3))   IS_NULLABLE
+                      , 'Y'        , 'YES'
+                      , 'N'        , 'NO'
+                      , NULL
+                     ) as varchar2(3))   IS_NULLABLE
     FROM ALL_TAB_COLUMNS  tc
-       , ALL_COL_COMMENTS cc
-   WHERE tc.OWNER         = cc.OWNER
-     AND tc.TABLE_NAME    = cc.TABLE_NAME
-     AND tc.COLUMN_NAME   = cc.COLUMN_NAME
+    JOIN ALL_COL_COMMENTS cc ON (
+       tc.OWNER = cc.OWNER
+       AND tc.TABLE_NAME = cc.TABLE_NAME
+       AND tc.COLUMN_NAME = cc.COLUMN_NAME)
+-- 	LEFT JOIN ALL_IND_COLUMNS ic ON (tc.OWNER = ic.INDEX_OWNER AND tc.TABLE_NAME = ic.TABLE_NAME AND tc.COLUMN_NAME = ic.COLUMN_NAME)
+-- 	LEFT JOIN ALL_INDEXES       i ON (ic.INDEX_OWNER = i.OWNER AND ic.INDEX_NAME = i.INDEX_NAME AND ic.TABLE_OWNER = i.TABLE_OWNER AND ic.TABLE_NAME = i.TABLE_NAME AND i.UNIQUENESS = 'UNIQUE' AND i.GENERATED = 'N')
+--    LEFT JOIN ALL_CONS_COLUMNS   ccl ON (
+--        tc.OWNER = ccl.OWNER
+--       AND tc.TABLE_NAME = ccl.TABLE_NAME
+--       AND tc.COLUMN_NAME = ccl.COLUMN_NAME)
+--    LEFT JOIN ALL_CONSTRAINTS  c ON (
+--       tc.OWNER         = c.OWNER
+--       AND tc.TABLE_NAME    = c.TABLE_NAME
+--       AND c.CONSTRAINT_NAME = ccl.CONSTRAINT_NAME
+--       AND c.CONSTRAINT_TYPE = 'P')
+WHERE tc.OWNER = (SELECT sys_context( 'userenv', 'current_schema' ) FROM DUAL)
+ORDER BY tc.OWNER, tc.TABLE_NAME, tc.COLUMN_ID
