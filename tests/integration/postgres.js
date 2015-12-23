@@ -26,12 +26,12 @@ describe ("postgres schema", function () {
 
 			db = connection;
 
-			dbInfo.do ([
+			dbInfo.do (config.sql.employees.concat([
 				config.sql.person,
 				'CREATE INDEX "nameIndex" ON person (name);',
 				'CREATE UNIQUE INDEX "uniqueEmailIndex" ON person (email);',
 				'CREATE INDEX "otherIndex" ON person (name,email);'
-			], function (err, results) {
+			]), function (err, results) {
 				callback (err);
 			});
 		});
@@ -39,7 +39,13 @@ describe ("postgres schema", function () {
 
 	after (function (callback) {
 		dbInfo.do ([
-			"DROP TABLE person;"
+			"DROP TABLE salaries",
+			"DROP TABLE titles",
+			"DROP TABLE dept_manager",
+			"DROP TABLE dept_emp",
+			"DROP TABLE departments",
+			"DROP TABLE employees",
+			"DROP TABLE person"
 		], function (err, results) {
 			callback (err);
 		});
@@ -73,4 +79,19 @@ describe ("postgres schema", function () {
 			done();
 		});
 	});
+
+	it ("foreigh keys", function (done) {
+		DBInfo.getInfo(connParams, function(err, result) {
+
+			if (err) {
+				// console.error(err);
+				assert (false, err);
+			}
+
+			config.checkForeign (assert, result);
+
+			done();
+		});
+	});
+
 });

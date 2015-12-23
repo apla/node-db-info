@@ -42,6 +42,7 @@ var connections = {
 };
 
 var personSql = fs.readFileSync (path.join (__dirname, 'integration/person.sql')).toString();
+var employeesSql = fs.readFileSync (path.join (__dirname, 'integration/employees.sql')).toString();
 
 function dbCase (name, dialect) {
 	if (dialect === "oracle") {
@@ -100,10 +101,76 @@ function checkCommon (assert, result, dialect) {
 
 }
 
+function checkForeign (assert, result, dialect) {
+
+	var salaries = dbCase('salaries', dialect)
+
+	assert.ok(result.tables[salaries]);
+	var salariesTable = result.tables[salaries];
+
+	var employees = dbCase('employees', dialect);
+
+	var emp_no = dbCase('emp_no', dialect);
+	var empNoColumn = salariesTable.columns[emp_no];
+	assert.ok(empNoColumn);
+	assert.equal(empNoColumn.name, emp_no);
+
+	assert.equal (empNoColumn.ref.table, employees);
+	assert.equal (empNoColumn.ref.column, emp_no);
+
+	// TODO: UPDATE/DELETE rules
+
+	var titles = dbCase('titles', dialect);
+	var titlesTable = result.tables[titles];
+	var empNoColumn = titlesTable.columns[emp_no];
+	assert.ok(empNoColumn);
+	assert.equal(empNoColumn.name, emp_no);
+
+	assert.equal (empNoColumn.ref.table, employees);
+	assert.equal (empNoColumn.ref.column, emp_no);
+
+	var dept_manager = dbCase('dept_manager', dialect);
+	var deptManagerTable = result.tables[dept_manager];
+	var empNoColumn = deptManagerTable.columns[emp_no];
+	assert.ok(empNoColumn);
+	assert.equal(empNoColumn.name, emp_no);
+
+	assert.equal (empNoColumn.ref.table, employees);
+	assert.equal (empNoColumn.ref.column, emp_no);
+
+	var departments = dbCase('departments', dialect);
+	var dept_no = dbCase('dept_no', dialect);
+	var deptNoColumn = deptManagerTable.columns[dept_no];
+	assert.ok(deptNoColumn);
+	assert.equal(deptNoColumn.name, dept_no);
+
+	assert.equal (deptNoColumn.ref.table, departments);
+	assert.equal (deptNoColumn.ref.column, dept_no);
+
+	var dept_emp = dbCase('dept_emp', dialect);
+	var deptEmpTable = result.tables[dept_emp];
+	var empNoColumn = deptEmpTable.columns[emp_no];
+	assert.ok(empNoColumn);
+	assert.equal(empNoColumn.name, emp_no);
+
+	assert.equal (empNoColumn.ref.table, employees);
+	assert.equal (empNoColumn.ref.column, emp_no);
+
+	var deptNoColumn = deptEmpTable.columns[dept_no];
+	assert.ok(deptNoColumn);
+	assert.equal(deptNoColumn.name, dept_no);
+
+	assert.equal (deptNoColumn.ref.table, departments);
+	assert.equal (deptNoColumn.ref.column, dept_no);
+
+}
+
 module.exports = {
 	sql: {
-		person: personSql,
+		person:    personSql,
+		employees: employeesSql.split (';').map (function (s) {return s.trim()}).filter (function (s) {return s.length})
 	},
-	connections: connections,
-	checkCommon: checkCommon,
+	connections:  connections,
+	checkCommon:  checkCommon,
+	checkForeign: checkForeign,
 }

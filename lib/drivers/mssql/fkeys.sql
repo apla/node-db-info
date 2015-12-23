@@ -1,11 +1,11 @@
 SELECT
-    fk.name,
-    OBJECT_NAME(fk.parent_object_id) 'Parent table',
-    c1.name 'Parent column',
-    OBJECT_NAME(fk.referenced_object_id) 'Referenced table',
-    c2.name 'Referenced column',
-    ON_UPDATE = fk.update_referential_action_desc,
-    ON_DELETE = fk.delete_referential_action_desc
+    OBJECT_NAME(fk.parent_object_id) 'FKTABLE_NAME',
+    c1.name 'FKCOLUMN_NAME',
+    OBJECT_NAME(fk.referenced_object_id) 'PKTABLE_NAME',
+    c2.name 'PKCOLUMN_NAME',
+    fk.update_referential_action_desc 'UPDATE_RULE',
+    fk.delete_referential_action_desc 'DELETE_RULE',
+    fk.name AS FK_NAME
 FROM
     sys.foreign_keys fk
 INNER JOIN

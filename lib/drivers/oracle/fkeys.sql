@@ -1,18 +1,17 @@
 SELECT /*+ CHOOSE */
-         to_char( NULL )    UK_TABLE_CAT
-       , uk.OWNER           UK_TABLE_SCHEM
-       , uk.TABLE_NAME      UK_TABLE_NAME
-       , uc.COLUMN_NAME     UK_COLUMN_NAME
-       , to_char( NULL )    FK_TABLE_CAT
-       , fk.OWNER           FK_TABLE_SCHEM
-       , fk.TABLE_NAME      FK_TABLE_NAME
-       , fc.COLUMN_NAME     FK_COLUMN_NAME
+         to_char( NULL )    PKTABLE_CAT
+       , uk.OWNER           PKTABLE_SCHEMA
+       , uk.TABLE_NAME      PKTABLE_NAME
+       , uc.COLUMN_NAME     PKCOLUMN_NAME
+       , to_char( NULL )    FKTABLE_CAT
+       , fk.OWNER           FKTABLE_SCHEMA
+       , fk.TABLE_NAME      FKTABLE_NAME
+       , fc.COLUMN_NAME     FKCOLUMN_NAME
        , uc.POSITION        ORDINAL_POSITION
-       , 3                  UPDATE_RULE
-       , decode( fk.DELETE_RULE, 'CASCADE', 0, 'RESTRICT', 1, 'SET NULL', 2, 'NO ACTION', 3, 'SET DEFAULT', 4 )
-                            DELETE_RULE
+       , 'NO ACTION'        UPDATE_RULE
+       , fk.DELETE_RULE     DELETE_RULE
        , fk.CONSTRAINT_NAME FK_NAME
-       , uk.CONSTRAINT_NAME UK_NAME
+       , uk.CONSTRAINT_NAME PK_NAME
        , to_char( NULL )    DEFERABILITY
        , decode( uk.CONSTRAINT_TYPE, 'P', 'PRIMARY', 'U', 'UNIQUE')
                             UNIQUE_OR_PRIMARY
@@ -29,3 +28,4 @@ SELECT /*+ CHOOSE */
      AND uk.CONSTRAINT_NAME  = fk.R_CONSTRAINT_NAME
      AND uk.OWNER            = fk.R_OWNER
      AND uc.POSITION         = fc.POSITION
+     AND uk.OWNER = (SELECT sys_context( 'userenv', 'current_schema' ) FROM DUAL)
