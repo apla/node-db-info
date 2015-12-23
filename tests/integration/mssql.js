@@ -78,7 +78,7 @@ describe ("SQL Server schema", function () {
 		});
 	});
 
-	it.only ("foreigh keys", function (done) {
+	it ("foreigh keys", function (done) {
 		DBInfo.getInfo(connParams, function(err, result) {
 
 			if (err) {

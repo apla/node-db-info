@@ -8,7 +8,8 @@ The following databases are currently supported:
  * sqlite3 - via: [node-sqlite3](https://github.com/developmentseed/node-sqlite3)
  * mysql - via: [node-mysql](https://github.com/felixge/node-mysql)
  * PostgreSQL - via: [node-postgres](https://github.com/brianc/node-postgres)
- * Oracle - via: [node-oracle](https://github.com/mariano/node-db-oracle)
+ * Oracle - via: [node-oracledb](https://github.com/oracle/node-oracledb)
+ * MS SQL Server - via: [node-tedious](https://github.com/pekim/tedious)
 
 ## Quick Examples
 
@@ -39,7 +40,17 @@ The following databases are currently supported:
 
 You can install using Node Package Manager (npm):
 
-    npm install async
+    npm install db-info
+
+## Supported features
+
+|**database**|**columns+keys**|**streaming**|**foreign keys**|
+|------------|-------------|-------------|----------------|
+|Oracle|✓|✓|✓|
+|MSSQL|✓|✓|✓|
+|Postgres|✓|✓|✓|
+|MySQL|✓|✓|✓|
+|SQLite|✓|-|-|
 
 ## Documentation
 
