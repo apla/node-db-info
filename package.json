@@ -17,7 +17,7 @@
     "async": "~>0.1.15"
   },
   "scripts": {
-    "test": "mocha --recursive ./tests"
+    "test": "istanbul cover _mocha -- -R spec --recursive ./tests && cat ./coverage/lcov.info | codecov"
   },
   "devDependencies": {
     "nodeunit": "~>0.6.4"
