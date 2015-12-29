@@ -48,8 +48,8 @@ describe ("Mysql schema", function () {
     });
 
     it ("with existing connection", function (done) {
-        DBInfo.getInfo(connParams, function(err, result) {
-        // DBInfo.getInfo({driver: connParams.driver, db: db}, function(err, result) {
+        // DBInfo.getInfo(connParams, function(err, result) {
+        DBInfo.getInfo({driver: connParams.driver, db: db}, function(err, result) {
 
             if (err) {
                 // console.error(err);
