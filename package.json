@@ -13,13 +13,13 @@
   "license": "MIT",
   "repository": { "type": "git", "url": "https://github.com/nearinfinity/node-db-info.git" },
   "dependencies": {
-    "optimist": "~0.3.0",
-    "async": "~>0.1.15"
   },
   "scripts": {
-    "test": "istanbul cover _mocha -- -R spec --recursive ./tests && cat ./coverage/lcov.info | codecov"
+    "test": "istanbul cover _mocha -- -R spec --recursive ./tests && cat ./coverage/lcov.info | codecov",
+    "localtest": "export GIT_BRANCH=`git rev-parse --abbrev-ref HEAD`; export GIT_COMMIT=`git rev-parse HEAD`; istanbul -x 'lib/drivers/sqlite3_parser.js' cover _mocha -- -R spec --recursive ./tests && cat ./coverage/lcov.info | codecov"
   },
   "devDependencies": {
-    "nodeunit": "~>0.6.4"
+    "mocha": "*",
+	"istanbul": "*"
   }
 }
