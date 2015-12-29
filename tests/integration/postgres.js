@@ -12,12 +12,7 @@ describe ("postgres schema", function () {
 
 	var db;
 	var dbInfo;
-	var connParams = {
-		driver: 'postgres',
-		user: config.connections.postgres.user,
-		password: config.connections.postgres.password,
-		database: config.connections.postgres.database
-	};
+	var connParams = config.connections.postgres;
 
 	before (function (callback) {
 

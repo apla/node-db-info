@@ -12,12 +12,7 @@ describe ("SQL Server schema", function () {
 
 	var db;
 	var dbInfo;
-	var connParams = {
-		driver: 'mssql',
-		userName: config.connections.mssql.userName,
-		password: config.connections.mssql.password,
-		server:   config.connections.mssql.server
-	};
+	var connParams = config.connections.mssql;
 
 	before (function (callback) {
 

@@ -5,6 +5,7 @@ var DBInfo = require ('../lib/db_info');
 
 var connections = {
 	mysql: {
+		driver: 'mysql',
 		database: 'bookshelf_test',
 		user: 'bookshelf',
 		password: 'passbookword',
@@ -12,26 +13,30 @@ var connections = {
 	},
 
 	postgres: {
+		driver: 'postgres',
 		database: 'bookshelf_test',
 		user: 'apla'
 	},
 
 	sqlite3: {
+		driver: 'sqlite3',
 		filename: ':memory:'
 	},
 
 	mssql: {
-		userName: 'expressaccess',
+		driver: 'mssql',
+		user: 'expressaccess',
 		password: '2strongWa+er',
-		server: '192.168.42.231',
-		// port: '1433',
 		tunnel: {
 			gatewayHost: 'apla.me',
 			gatewayUser: 'apla',
 			gatewayPrivateKey: 'apla.me'
+		host: '192.168.42.231',
+		port: '1433',
 		}
 	},
 	oracle: {
+		driver: 'oracle',
 		user: 'oraxe',
 		password: '2strongWa+er',
 		//connectString: "(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.42.231)(PORT=1521))(CONNECT_DATA=(SID=XE))"

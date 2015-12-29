@@ -11,12 +11,7 @@ describe ("Oracle schema", function () {
 
 	var db;
 	var dbInfo;
-	var connParams = {
-		driver: 'oracle',
-		user: config.connections.oracle.user,
-		password: config.connections.oracle.password,
-		connectString: config.connections.oracle.connectString
-	};
+	var connParams = config.connections.oracle;
 
 	this.timeout (20000);
 

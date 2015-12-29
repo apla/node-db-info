@@ -13,12 +13,7 @@ describe ("Mysql schema", function () {
 
     var db;
     var dbInfo;
-    var connParams = {
-        driver: 'mysql',
-        user: config.connections.mysql.user,
-        password: config.connections.mysql.password,
-        database: config.connections.mysql.database
-    };
+    var connParams = config.connections.mysql;
 
     before (function (callback) {
 
