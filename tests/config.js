@@ -27,22 +27,30 @@ var connections = {
 		driver: 'mssql',
 		user: 'expressaccess',
 		password: '2strongWa+er',
-		tunnel: {
-			gatewayHost: 'apla.me',
-			gatewayUser: 'apla',
-			gatewayPrivateKey: 'apla.me'
 		host: '192.168.42.231',
 		port: '1433',
+		tunnel: {
+			host: 'apla.me',
+			user: 'apla',
+			privateKeyPath: '/Users/apla/.ssh/local-dsa'
 		}
 	},
 	oracle: {
 		driver: 'oracle',
 		user: 'oraxe',
 		password: '2strongWa+er',
+		database: 'XE',
 		//connectString: "(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.42.231)(PORT=1521))(CONNECT_DATA=(SID=XE))"
 		//connectString: '192.168.42.231:1521/XE'
-		connectString: '192.168.42.231:1521/XE'
-		//connectString: 'sigrun/XE'
+		//connectString: '192.168.42.231:1521/XE',
+		//connectString: 'sigrun/XE',
+		host: '192.168.42.231',
+		port: 1521,
+		tunnel: {
+			host: 'apla.me',
+			user: 'apla',
+			privateKeyPath: '/Users/apla/.ssh/local-dsa'
+		}
 	}
 };
 
