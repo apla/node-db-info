@@ -1,7 +1,6 @@
 var assert = require ('assert');
 
 var dbinfo = require("../../lib/db_info");
-var nodeunit = require("nodeunit");
 var sqlite3 = require("sqlite3");
 
 describe ("SQLite schema", function () {
