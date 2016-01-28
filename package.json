@@ -30,6 +30,7 @@
     "pg-query-stream": "^1.0.0",
     "mysql": "^2.10.2",
     "mocha": "^2.4.4",
-    "istanbul": "^0.4.2"
+    "istanbul": "^0.4.2",
+    "ssh2": "^0.4.13"
   }
 }
