@@ -5,17 +5,18 @@ var DBInfo = require ('../lib/db_info');
 
 var connections = {
 	mysql: {
-		driver: 'mysql',
-		database: 'bookshelf_test',
-		user: 'bookshelf',
-		password: 'passbookword',
+		driver:   'mysql',
+		database: process.env.MYSQL_DB   || 'bookshelf_test',
+		user:     process.env.MYSQL_USER || 'bookshelf',
+		password: process.env.MYSQL_PASS || 'passbookword',
 		encoding: 'utf8'
 	},
 
 	postgres: {
-		driver: 'postgres',
-		database: 'bookshelf_test',
-		user: 'apla'
+		driver:   'postgres',
+		database: process.env.PG_DB   || 'bookshelf_test',
+		user:     process.env.PG_USER || 'apla',
+		password: process.env.PG_PASS
 	},
 
 	sqlite3: {
@@ -27,12 +28,15 @@ var connections = {
 		driver: 'mssql',
 		user: 'expressaccess',
 		password: '2strongWa+er',
-		host: '192.168.42.231',
+		host: '10.10.10.111',
 		port: '1433',
 		tunnel: {
 			host: 'apla.me',
 			user: 'apla',
-			privateKeyPath: '/Users/apla/.ssh/local-dsa'
+			privateKey: process.env.APLAPK4REMOTEDB,
+		},
+		options: {
+			connectTimeout: 30000
 		}
 	},
 	oracle: {
@@ -44,12 +48,12 @@ var connections = {
 		//connectString: '192.168.42.231:1521/XE'
 		//connectString: '192.168.42.231:1521/XE',
 		//connectString: 'sigrun/XE',
-		host: '192.168.42.231',
+		host: '10.10.10.111',
 		port: 1521,
 		tunnel: {
 			host: 'apla.me',
 			user: 'apla',
-			privateKeyPath: '/Users/apla/.ssh/local-dsa'
+			privateKey: process.env.APLAPK4REMOTEDB,
 		}
 	}
 };
