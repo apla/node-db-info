@@ -36,10 +36,10 @@ install:
 
 build_script:
   # postgres
-  - createdb %PG_DB%
+  - createdb nodedbconnect
   # mysql
-  - mysql -e "drop database test; create database %MYSQL_DB%;" --user=root
+  - mysql -e "drop database test; create database nodedbconnect;" --user=root
   # sqlserver
   #- ps: ./appveyor-sqlserver.ps1 SQL2008R2SP2
-  #- sqlcmd -S localhost,1433 -U sa -P Password12! -Q "CREATE DATABASE %SQLSERVER_DB%" -d "master"
+  #- sqlcmd -S localhost,1433 -U sa -P Password12! -Q "CREATE DATABASE nodedbconnect" -d "master"
   - npm test
