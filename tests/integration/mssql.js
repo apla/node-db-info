@@ -44,6 +44,8 @@ describe ("SQL Server schema", function () {
 		], function (err, results) {
 			if (err) return callback (err);
 			dbInfo.disconnect (callback);
+			// disconnect in disconnected should be ok
+			dbInfo.disconnect ();
 		});
 	});
 
