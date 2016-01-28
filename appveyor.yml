@@ -1,0 +1,45 @@
+version: 1.0.{build}
+
+environment:
+  # postgres
+  PG_USER: postgres
+  PG_PASS: Password12!
+  PG_DB:   nodedbconnect
+  PG_PATH: C:\Program Files\PostgreSQL\9.4
+  # mysql
+  MYSQL_USER: root
+  MYSQL_PASS: Password12!
+  MYSQL_DB: nodedbconnect
+  MYSQL_PATH: C:\Program Files\MySql\MySQL Server 5.6
+  # sql server
+  SQLSERVER_HOST: localhost
+  SQLSERVER_PORT: 1433
+  SQLSERVER_USER: sa
+  SQLSERVER_PASS: Password12!
+  SQLSERVER_DB: nodedbconnect
+
+services:
+  - mysql
+  - postgresql94
+  - mssql2008r2sp2
+
+init:
+  - npm -v
+  - node -v
+  - npm cache clean
+  - SET PATH=%PG_PATH%\bin;%MYSQL_PATH%\bin;%PATH%
+
+test: false
+
+install:
+  - npm install
+
+build_script:
+  # postgres
+  - createdb %PG_DB%
+  # mysql
+  - mysql -e "drop database test; create database %MYSQL_DB%;" --user=root
+  # sqlserver
+  #- ps: ./appveyor-sqlserver.ps1 SQL2008R2SP2
+  #- sqlcmd -S localhost,1433 -U sa -P Password12! -Q "CREATE DATABASE %SQLSERVER_DB%" -d "master"
+  - npm test
