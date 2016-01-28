@@ -8,7 +8,7 @@ var connections = {
 		driver:   'mysql',
 		database: process.env.MYSQL_DB   || 'bookshelf_test',
 		user:     process.env.MYSQL_USER || 'bookshelf',
-		password: process.env.MYSQL_PASS || 'passbookword',
+		password: process.env.MYSQL_PWD  || 'passbookword',
 		encoding: 'utf8'
 	},
 
