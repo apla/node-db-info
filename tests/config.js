@@ -14,9 +14,9 @@ var connections = {
 
 	postgres: {
 		driver:   'postgres',
-		database: process.env.PG_DB   || 'bookshelf_test',
-		user:     process.env.PG_USER || 'apla',
-		password: process.env.PG_PASS
+		database: process.env.PGDATABASE   || 'bookshelf_test',
+		user:     process.env.PGUSER || 'apla',
+		password: process.env.PGPASSWORD
 	},
 
 	sqlite3: {

@@ -2,9 +2,9 @@ version: 1.0.{build}
 
 environment:
   # postgres
-  PG_USER: postgres
-  PG_PASS: Password12!
-  PG_DB:   nodedbconnect
+  PGUSER: postgres
+  PGPASSWORD: Password12!
+  PGDATABASE:   nodedbconnect
   PG_PATH: C:\Program Files\PostgreSQL\9.4
   # mysql
   MYSQL_USER: root
@@ -35,10 +35,11 @@ install:
   - npm install
 
 build_script:
-  # postgres
-  - createdb nodedbconnect
+
   # mysql
-  - mysql -e "drop database test; create database nodedbconnect;" --user=root
+  - mysql -e "drop database test; create database %MYSQL_DB%;" --user=root
+  # postgres
+  - createdb %PGDATABASE%
   # sqlserver
   #- ps: ./appveyor-sqlserver.ps1 SQL2008R2SP2
   #- sqlcmd -S localhost,1433 -U sa -P Password12! -Q "CREATE DATABASE nodedbconnect" -d "master"
