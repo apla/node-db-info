@@ -14,6 +14,16 @@
   "repository": { "type": "git", "url": "https://github.com/nearinfinity/node-db-info.git" },
   "dependencies": {
   },
+  "devDependencies": {
+    "tedious": "^1.13.2",
+    "sqlite3": "^3.1.1",
+    "pg": "^4.4.4",
+    "pg-query-stream": "^1.0.0",
+    "mysql": "^2.10.2"
+  },
+  "optionalDependencies": {
+    "oracledb": "^1.5.0"
+  },
   "scripts": {
     "test": "istanbul cover _mocha -- --recursive ./tests && cat ./coverage/lcov.info | codecov",
     "appveyor": "istanbul cover node_modules/mocha/bin/_mocha -- --recursive ./tests && cat ./coverage/lcov.info | codecov",
