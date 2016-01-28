@@ -42,13 +42,14 @@ describe ("SQL Server schema", function () {
 			"DROP TABLE employees",
 			"DROP TABLE person"
 		], function (err, results) {
-			callback (err);
+			if (err) return callback (err);
+			dbInfo.disconnect (callback);
 		});
 	});
 
 	this.timeout (5000);
 
-	it ("with existing connection", function (done) {
+	it.only ("with existing connection", function (done) {
 		// DBInfo.getInfo(connParams, function(err, result) {
 		DBInfo.getInfo({driver: connParams.driver, db: db}, function(err, result) {
 

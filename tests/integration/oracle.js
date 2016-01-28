@@ -49,7 +49,8 @@ describe ("Oracle schema", function () {
 			"DROP TABLE employees",
 			"DROP TABLE person"
 		], function (err, results) {
-			callback (err);
+			if (err) return callback (err);
+			dbInfo.disconnect (callback);
 		});
 	});
 
