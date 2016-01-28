@@ -7,10 +7,11 @@ SELECT o.Name                   as TABLE_NAME
             WHEN t.name IN ('numeric') THEN t.name+'('+CONVERT(varchar(10),c.precision)+','+CONVERT(varchar(10),c.scale)+')'
              ELSE t.name
          END AS COLUMN_TYPE
-     , c.is_nullable            as IS_NULLABLE
-     , c.max_length             as TYPE_LENGTH
-     , c.precision              as TYPE_PRECISION
-     , c.scale                  as TYPE_SCALE
+     , CASE WHEN c.is_nullable = 1 THEN 'YES' ELSE 'NO' END as IS_NULLABLE
+     , c.max_length             as DATA_LENGTH
+     , c.precision              as NUMERIC_PRECISION
+     , c.scale                  as NUMERIC_PRECISION_RADIX
+     , t.name                   as TYPE_NAME
      , t.*
 FROM sys.columns c
      INNER JOIN sys.objects o ON c.object_id=o.object_id
