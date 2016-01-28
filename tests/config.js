@@ -26,10 +26,10 @@ var connections = {
 
 	mssql: {
 		driver: 'mssql',
-		user: 'expressaccess',
-		password: '2strongWa+er',
-		host: '10.10.10.111',
-		port: '1433',
+		user:     process.env.SQLSERVER_USER || 'expressaccess',
+		password: process.env.SQLSERVER_PASS || '2strongWa+er',
+		host:     process.env.SQLSERVER_HOST || '10.10.10.111',
+		port:     process.env.SQLSERVER_PORT || '1433',
 		tunnel: {
 			host: 'apla.me',
 			user: 'apla',

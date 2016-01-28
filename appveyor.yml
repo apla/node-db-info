@@ -41,6 +41,6 @@ build_script:
   # postgres
   - createdb %PGDATABASE%
   # sqlserver
-  #- ps: ./appveyor-sqlserver.ps1 SQL2008R2SP2
-  #- sqlcmd -S localhost,1433 -U sa -P Password12! -Q "CREATE DATABASE nodedbconnect" -d "master"
+  - ps: ./appveyor-sqlserver.ps1 SQL2008R2SP2
+  - sqlcmd -S localhost,1433 -U sa -P Password12! -Q "CREATE DATABASE %SQLSERVER_DB%" -d "master"
   - npm run appveyor
