@@ -14,13 +14,6 @@
   "repository": { "type": "git", "url": "https://github.com/nearinfinity/node-db-info.git" },
   "dependencies": {
   },
-  "devDependencies": {
-    "tedious": "^1.13.2",
-    "sqlite3": "^3.1.1",
-    "pg": "^4.4.4",
-    "pg-query-stream": "^1.0.0",
-    "mysql": "^2.10.2"
-  },
   "optionalDependencies": {
     "oracledb": "^1.5.0"
   },
@@ -31,7 +24,12 @@
     "localtest": "export GIT_BRANCH=`git rev-parse --abbrev-ref HEAD`; export GIT_COMMIT=`git rev-parse HEAD`; istanbul cover -x 'lib/drivers/sqlite3_parser.js' _mocha -- -R spec --recursive ./tests && cat ./coverage/lcov.info | codecov"
   },
   "devDependencies": {
-    "mocha": "*",
-    "istanbul": "*"
+    "tedious": "^1.13.2",
+    "sqlite3": "^3.1.1",
+    "pg": "^4.4.4",
+    "pg-query-stream": "^1.0.0",
+    "mysql": "^2.10.2",
+    "mocha": "^2.4.4",
+    "istanbul": "^0.4.2"
   }
 }
