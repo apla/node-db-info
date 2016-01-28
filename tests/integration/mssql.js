@@ -49,7 +49,7 @@ describe ("SQL Server schema", function () {
 
 	this.timeout (5000);
 
-	it.only ("with existing connection", function (done) {
+	it ("with existing connection", function (done) {
 		// DBInfo.getInfo(connParams, function(err, result) {
 		DBInfo.getInfo({driver: connParams.driver, db: db}, function(err, result) {
 
