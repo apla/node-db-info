@@ -3,7 +3,7 @@
   "description": "Node.js relational database information utility",
   "keywords": ["database", "db", "sqlite", "mysql", "PostgreSQL", "oracle", "db-oracle"],
   "version": "0.0.3",
-  "engines": { "node" : ">=0.6.0" },
+  "engines": { "node" : ">=0.10.0" },
   "author": "Joe Ferner <joe.ferner@nearinfinity.com>",
   "maintainers": [
     { "name": "Joe Ferner", "email": "joe.ferner@nearinfinity.com" },
@@ -15,11 +15,13 @@
   "dependencies": {
   },
   "scripts": {
-    "test": "istanbul cover _mocha -- -R spec --recursive ./tests && cat ./coverage/lcov.info | codecov",
-    "localtest": "export GIT_BRANCH=`git rev-parse --abbrev-ref HEAD`; export GIT_COMMIT=`git rev-parse HEAD`; istanbul -x 'lib/drivers/sqlite3_parser.js' cover _mocha -- -R spec --recursive ./tests && cat ./coverage/lcov.info | codecov"
+    "test": "istanbul cover _mocha -- --recursive ./tests && cat ./coverage/lcov.info | codecov",
+    "appveyor": "istanbul cover node_modules/mocha/bin/_mocha -- --recursive ./tests && cat ./coverage/lcov.info | codecov",
+    "simpletest": "mocha --recursive ./tests",
+    "localtest": "export GIT_BRANCH=`git rev-parse --abbrev-ref HEAD`; export GIT_COMMIT=`git rev-parse HEAD`; istanbul cover -x 'lib/drivers/sqlite3_parser.js' _mocha -- -R spec --recursive ./tests && cat ./coverage/lcov.info | codecov"
   },
   "devDependencies": {
     "mocha": "*",
-	"istanbul": "*"
+    "istanbul": "*"
   }
 }
