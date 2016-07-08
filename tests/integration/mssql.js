@@ -41,7 +41,7 @@ describe ("SQL Server schema", function () {
 			"DROP TABLE departments",
 			"DROP TABLE employees",
 			"DROP TABLE person"
-		], function (err, results) {
+		], {ignoreErrors: true}, function (err, results) {
 			if (err) return callback (err);
 			dbInfo.disconnect (callback);
 			// disconnect in disconnected should be ok
