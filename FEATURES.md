@@ -26,6 +26,7 @@ any-db support: no
  * oracle: yes
  * pg: yes
  * mysql note: https://github.com/felixge/node-mysql/blob/1e40f08c0c643ceb1e475c61460c1e1fbcf7745b/lib/protocol/packets/RowDataPacket.js#L42
+ * mysql2: yes
  * mssql: yes, by default return array, WIP: check config.options.useColumnNames, but don't allow to set format per query: https://github.com/pekim/tedious/blob/e3f0a59f213e97bf284b32922aea0969af537a52/src/connection.js#L646
  * sqlite: not supported, function RowToJS explicitly format results as object https://github.com/mapbox/node-sqlite3/blob/master/src/statement.cc#L749
 
@@ -38,7 +39,7 @@ any-db support: no
  * oracle: yes, using resultSet
  * pg: yes, using cursor
  * mysql: yes/no, need to add pause after row fetch?
- * mssql: events, unstoppable
+ * mssql: events, unstoppable, we can use cursor for this http://stackoverflow.com/questions/4974981/sql-server-cursor
  * sqlite: developer side
 
 ### Named/positional parameters
@@ -48,7 +49,8 @@ any-db support: varies, used driver, cannot pass same values to mssql and postgr
  * oracle: ":param" named/positional
  * mssql: "@param" named only
  * mysql: named/positional
- * postgres: positional
+ * mysql2: both, with https://github.com/sidorares/named-placeholders/
+ * postgres: positional, allows named with https://github.com/bwestergard/node-postgres-named
  * sqlite: yes and unknown https://github.com/mapbox/node-sqlite3/issues/3163
 
 requirement: query tokenizer, entity/string escaping

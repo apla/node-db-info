@@ -3,10 +3,12 @@
 db-info is a utility module which provides a database independent way of
 getting database metadata.
 
+[![Build status](https://ci.appveyor.com/api/projects/status/122vpkwp96g0a49v?svg=true)](https://ci.appveyor.com/project/apla/node-db-info)
+
 The following databases are currently supported:
 
- * sqlite3 - via: [node-sqlite3](https://github.com/developmentseed/node-sqlite3)
- * mysql - via: [node-mysql](https://github.com/felixge/node-mysql)
+ * Sqlite3 - via: [node-sqlite3](https://github.com/developmentseed/node-sqlite3)
+ * Mysql - via: [node-mysql](https://github.com/felixge/node-mysql)
  * PostgreSQL - via: [node-postgres](https://github.com/brianc/node-postgres)
  * Oracle - via: [node-oracledb](https://github.com/oracle/node-oracledb)
  * MS SQL Server - via: [node-tedious](https://github.com/pekim/tedious)
@@ -44,19 +46,19 @@ You can install using Node Package Manager (npm):
 
 ## Supported features
 
-|**database**|**columns+keys**|**streaming**|**foreign keys**|
-|------------|-------------|-------------|----------------|
-|Oracle|✓|✓|✓|
-|MSSQL|✓|✓|✓|
-|Postgres|✓|✓|✓|
-|MySQL|✓|✓|✓|
-|SQLite|✓|-|-|
+|**database**|**columns+keys**|**foreign keys**|
+|------------|-------------|----------------|
+|Oracle|✓|✓|
+|MSSQL|✓|✓|
+|Postgres|✓|✓|
+|MySQL|✓|✓|
+|SQLite|✓|-|
 
 ## Documentation
 
 ### Command Line
 
-    db-info --driver=pg --connectionString=--connectionString=tcp://test:test@localhost/test
+    db-info --driver=pg --connectionString=tcp://test:test@localhost/test
 
 ### getInfo(opts, callback)
 
