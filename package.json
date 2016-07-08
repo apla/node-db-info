@@ -18,10 +18,10 @@
     "oracledb": "^1.5.0"
   },
   "scripts": {
-    "test": "istanbul cover _mocha -- --recursive ./tests && cat ./coverage/lcov.info | codecov",
-    "appveyor": "istanbul cover node_modules/mocha/bin/_mocha -- --recursive ./tests && cat ./coverage/lcov.info | codecov",
+    "test": "istanbul cover -x 'lib/drivers/sqlite3_parser.js' _mocha -- --recursive ./tests && cat ./coverage/lcov.info | codecov",
+    "appveyor": "istanbul cover -x 'lib/drivers/sqlite3_parser.js' node_modules/mocha/bin/_mocha -- --recursive ./tests && cat ./coverage/lcov.info | codecov",
     "simpletest": "mocha --recursive ./tests",
-    "localtest": "export GIT_BRANCH=`git rev-parse --abbrev-ref HEAD`; export GIT_COMMIT=`git rev-parse HEAD`; istanbul cover -x 'lib/drivers/sqlite3_parser.js' _mocha -- -R spec --recursive ./tests && cat ./coverage/lcov.info | codecov"
+    "localtest": "export GIT_BRANCH=`git rev-parse --abbrev-ref HEAD`; export GIT_COMMIT=`git rev-parse HEAD`; istanbul cover -x 'lib/drivers/sqlite3_parser.js' _mocha -- --recursive ./tests && cat ./coverage/lcov.info | codecov"
   },
   "devDependencies": {
     "tedious": "^1.13.2",
