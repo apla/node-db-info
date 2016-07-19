@@ -28,6 +28,9 @@ init:
   - node -v
   - npm cache clean
   - SET PATH=%PG_PATH%\bin;%MYSQL_PATH%\bin;%PATH%
+  - ps: |
+      Write-Host "Build worker environment variables:" -ForegroundColor Magenta
+      Get-ChildItem Env: | %{"{0}={1}" -f $_.Name,$_.Value}
 
 test: false
 
@@ -37,10 +40,10 @@ install:
 build_script:
 
   # mysql
-  - mysql -e "drop database test; create database %MYSQL_DB%;" --user=root
+  - mysql -e "create database %MYSQL_DB%;" --user=root
   # postgres
   - createdb %PGDATABASE%
   # sqlserver
   - ps: ./appveyor-sqlserver.ps1 SQL2008R2SP2
-  - sqlcmd -S localhost,1433 -U sa -P Password12! -Q "CREATE DATABASE %SQLSERVER_DB%" -d "master"
+  - sqlcmd -S %SQLSERVER_HOST%,%SQLSERVER_PORT% -U %SQLSERVER_USER% -P %SQLSERVER_PASS% -Q "CREATE DATABASE %SQLSERVER_DB%" -d "master"
   - npm run appveyor
