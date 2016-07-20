@@ -48,7 +48,7 @@ before_install:
 #  - .travis/oracle/download.sh
 #  - .travis/oracle/install.sh
 before_script:
-  - mysql -e 'create database $MYSQL_DB;' -uroot
+  - mysql -e "create database $MYSQL_DB;" -uroot
   - createdb $PGDATABASE
 script:
   - npm run travis
