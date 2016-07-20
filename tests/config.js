@@ -63,6 +63,12 @@ if (process.env.APPVEYOR) {
 	delete connections.oracle;
 }
 
+if (process.env.TRAVIS) {
+	delete connections.mssql;
+	delete connections.oracle;
+}
+
+
 var personSql = fs.readFileSync (path.join (__dirname, 'integration/person.sql')).toString();
 var employeesSql = fs.readFileSync (path.join (__dirname, 'integration/employees.sql')).toString();
 
