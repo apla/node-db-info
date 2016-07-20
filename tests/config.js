@@ -4,18 +4,24 @@ var path = require ('path');
 var DBInfo = require ('../lib/db_info');
 
 var connections = {
+	// TODO: http://dev.mysql.com/doc/refman/5.7/en/environment-variables.html
 	mysql: {
 		driver:   'mysql',
 		database: process.env.MYSQL_DB   || 'bookshelf_test',
 		user:     process.env.MYSQL_USER || 'bookshelf',
 		password: process.env.MYSQL_PWD  || 'passbookword',
+		host:     process.env.MYSQL_HOST || 'localhost',
+		port:     process.env.MYSQL_TCP_PORT || 3306,
 		encoding: 'utf8'
 	},
 
+	// TODO: https://www.postgresql.org/docs/9.5/static/libpq-envars.html
 	postgres: {
 		driver:   'postgres',
-		database: process.env.PGDATABASE   || 'bookshelf_test',
-		user:     process.env.PGUSER || 'apla',
+		database: process.env.PGDATABASE || 'bookshelf_test',
+		user:     process.env.PGUSER     || 'apla',
+		host:     process.env.PGHOSTADDR || process.env.PGHOST || 'localhost',
+		port:     process.env.PGPORT     || 5432,
 		password: process.env.PGPASSWORD
 	},
 
@@ -41,15 +47,15 @@ var connections = {
 	},
 	oracle: {
 		driver: 'oracle',
-		user: 'oraxe',
-		password: '2strongWa+er',
-		database: 'XE',
+		user:     process.env.ORA_USER || 'oraxe',
+		password: process.env.ORA_PASS || '2strongWa+er',
+		database: process.env.ORA_DB   || 'XE',
 		//connectString: "(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.42.231)(PORT=1521))(CONNECT_DATA=(SID=XE))"
 		//connectString: '192.168.42.231:1521/XE'
 		//connectString: '192.168.42.231:1521/XE',
 		//connectString: 'sigrun/XE',
-		host: '10.10.10.111',
-		port: 1521,
+		host: process.env.ORA_HOST || '10.10.10.111',
+		port: process.env.ORA_PORT || 1521,
 		tunnel: {
 			host: 'apla.me',
 			user: 'apla',
