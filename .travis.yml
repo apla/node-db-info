@@ -1,0 +1,51 @@
+language: node_js
+matrix:
+  include:
+  - node_js: '0.10'
+    env: _CXXAUTO=1
+  - node_js: '0.12'
+    env: _CXXAUTO=1
+  - node_js: '4'
+    env: CXX=g++-4.8
+  - node_js: '6'
+    env: CXX=g++-4.8
+sudo: required
+env:
+  global:
+  - PGUSER=postgres
+  - PGPASSWORD=
+  - PGDATABASE=nodedbconnect
+  - MYSQL_USER=travis
+  - MYSQL_PWD=
+  - MYSQL_DB=nodedbconnect
+  - ORACLE_COOKIE=sqldev
+  - ORACLE_FILE=oracle11g/xe/oracle-xe-11.2.0-1.0.x86_64.rpm.zip
+  - ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe
+  - ORACLE_SID=XE
+  - secure: vxP035LuFrlHfi27zinMK3QYxmpPSJJkfarkbpukC77dokMm76tFO1M7GbeumsehXdV4AltLOut5djNnuIBZl+hlt1Nm4KYevEXboKoXx9zYk4hhrlF4PAxn8EW9XZZrIwd5AaGfui1Oq6T7CVnNW+5JL33fZjhABo+0RqNh+EU4AP47oerhfuWVzZEsw6i5+j0qU62VSLaw1ZJ3mtxBGrP6dEu2WF/jjSuM25kxcdheO4fmjCLposBqmvmXax1Hur9aljVcNGzRBnZkh7VIHy/daG6JWEblmYShVbEk7joAzr2DQVwAlqkAM2yz+HHERC5O+UCQK2/pMTauMfz5JLdlhzXiAggyDTsDAiFmf1QMgYI6cIXncrxKt+DTEPZwpTnc17drnQSpoOgmd4DAwq+7Ij0gHV7JEG9KLBZ7/n0CJWq+sKvCqOKDABJQ7FT/LTmgoqXOCrrgP6cPDKmaw8mviJUL6Niz4jBixi7n4z18451U2WtpIjvLKu6BDtk3mDvzLBKp/LIUHUKaZqJ2DP6mzrlWVs5FedqQiKZtoWFhfeQVSA5S4+mYTe+hG7+fkKSXzEumaI6Y4idfccVJXh4zXrQq0oc4desUbZw7kCoWJRBSe4TSFszyQAxSvzCCMtQ8fJT45jEEMsfeGMNd8o/G0CWkSlBUDXb/ELPyEFg=
+  - secure: YW9MJTilZWH6sNrw2UpXNqNW6HsBzU1pCsI//sh/Uf23mMyC6KAkxI/2Hqfakt6ADaMblvze1w64wEphNlETgbX+lbZmUGa6C3ApyLlCeAcdYn43WE7PL+zybC90OcBqowHIn+2YpXC/8CHFvTDTJjpL/OXqAkIcfbEl1ZBLpFRkavehZAxHuHcXMFEXpB4Du0J20W9oxtKBmoETFFuCo1F4XzpsOI/THOzqDSf2gvXPUacWd7Vho5jUwkayiMDwQx17L8rdzvt2KrcTX7Pol2ovQiQHyUoqD5fBFos3zrvWIT5rnyGdZwAgUd+4s/Hng2nlUDpzCKiyg4wFloGNIPm18QkmBWdZm/Q+lnSyUjUFivP+DJwuClwqG66qb3tkmHEsR/lZNvhVC+lFLNT1GoZOTFTe8kMGohq1EXKAEWjxbtTx3Pv3nm99HY0bXCaajkLRyzL13E118pWLvgPCzHExiJNHvj3mxOF4L7oT4xSJj2WmhB1oy9iqsS2sMVfjWkz+z+UzA5KC8N5ASiQ9ffs+A0lGq17fWoOMGUbGjTaBDjpEMnrbBkx+UL0Y/EeT5ypO8cZtlIDwYmmhKfAPrKE77QAndCUPtowGjwoYVmfWHaiRB+l4xKON433LNf2G+ZZyhhvfLs01+bfVncgoR8P0+qYUC36ij7CvSSs71BA=
+services:
+  - mysql
+  - postgresql
+addons:
+  # postgresql: '9.4'
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - gcc-4.8
+    - g++-4.8
+#    - mysql-server-5.6
+#    - mysql-client-core-5.6
+#    - mysql-client-5.6
+cache:
+  directories:
+    - node_modules
+jdk:
+  - oraclejdk7
+before_install:
+  - .travis/oracle/download.sh
+  - .travis/oracle/install.sh
+before_script:
+  - mysql -e 'create database $MYSQL_DB;'
+  - psql -c 'create database $PGDATABASE;' -U postgres
