@@ -48,4 +48,4 @@ before_install:
 #  - .travis/oracle/install.sh
 before_script:
   - mysql -e 'create database $MYSQL_DB;'
-  - (unset PGDATABASE ; psql -c 'create database $PGDATABASE;' -U postgres)
+  - createdb $PGDATABASE
