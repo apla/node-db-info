@@ -15,7 +15,7 @@ env:
   - PGUSER=postgres
   - PGPASSWORD=
   - PGDATABASE=nodedbconnect
-  - MYSQL_USER=travis
+  - MYSQL_USER=root
   - MYSQL_PWD=
   - MYSQL_DB=nodedbconnect
   - ORACLE_COOKIE=sqldev
