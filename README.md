@@ -4,6 +4,7 @@ db-info is a utility module which provides a database independent way of
 getting database metadata.
 
 [![Build status](https://ci.appveyor.com/api/projects/status/122vpkwp96g0a49v?svg=true)](https://ci.appveyor.com/project/apla/node-db-info)
+[![Travis](https://travis-ci.org/apla/node-db-info.svg)](https://travis-ci.org/apla/node-db-info)
 
 The following databases are currently supported:
 
@@ -11,7 +12,7 @@ The following databases are currently supported:
  * Mysql - via: [node-mysql](https://github.com/felixge/node-mysql)
  * PostgreSQL - via: [node-postgres](https://github.com/brianc/node-postgres)
  * Oracle - via: [node-oracledb](https://github.com/oracle/node-oracledb)
- * MS SQL Server - via: [node-tedious](https://github.com/pekim/tedious)
+ * MSSQL Server - via: [node-tedious](https://github.com/pekim/tedious)
 
 ## Quick Examples
 
