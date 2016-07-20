@@ -9,7 +9,7 @@ var connections = {
 		driver:   'mysql',
 		database: process.env.MYSQL_DB   || 'bookshelf_test',
 		user:     process.env.MYSQL_USER || 'bookshelf',
-		password: process.env.MYSQL_PWD  || 'passbookword',
+		password: process.env.MYSQL_PWD,
 		host:     process.env.MYSQL_HOST || 'localhost',
 		port:     process.env.MYSQL_TCP_PORT || 3306,
 		encoding: 'utf8'

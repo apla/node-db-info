@@ -16,8 +16,8 @@ env:
   - PGPASSWORD=
   - PGDATABASE=nodedbconnect
   - MYSQL_USER=root
+#  - MYSQL_PWD=
   - MYSQL_HOST=127.0.0.1
-  - MYSQL_PWD=
   - MYSQL_DB=nodedbconnect
   - ORACLE_COOKIE=sqldev
   - ORACLE_FILE=oracle11g/xe/oracle-xe-11.2.0-1.0.x86_64.rpm.zip
@@ -50,3 +50,5 @@ before_install:
 before_script:
   - mysql -e 'create database $MYSQL_DB;'
   - createdb $PGDATABASE
+script:
+  - npm run travis

@@ -25,7 +25,8 @@
     "ssh2": "^0.4.13"
   },
   "scripts": {
-    "test": "istanbul cover -x 'lib/drivers/sqlite3_parser.js' _mocha -- --recursive ./tests && cat ./coverage/lcov.info | codecov",
+    "test": "MYSQL_PWD=passbookword istanbul cover -x 'lib/drivers/sqlite3_parser.js' _mocha -- --recursive ./tests && cat ./coverage/lcov.info | codecov",
+    "travis": "istanbul cover -x 'lib/drivers/sqlite3_parser.js' _mocha -- --recursive ./tests && cat ./coverage/lcov.info | codecov",
     "appveyor": "istanbul cover -x 'lib/drivers/sqlite3_parser.js' node_modules/mocha/bin/_mocha -- --recursive ./tests && cat ./coverage/lcov.info | codecov",
     "simpletest": "mocha --recursive ./tests",
     "localtest": "export GIT_BRANCH=`git rev-parse --abbrev-ref HEAD`; export GIT_COMMIT=`git rev-parse HEAD`; istanbul cover -x 'lib/drivers/sqlite3_parser.js' _mocha -- --recursive ./tests && cat ./coverage/lcov.info | codecov"
